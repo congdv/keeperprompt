@@ -1,0 +1,152 @@
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+# Go build cache
+.cache/
+
+# Go modules
+vendor/
+
+# Go coverage files
+*.cover
+*.prof
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node.js (for webapp)
+webapp/node_modules/
+webapp/npm-debug.log*
+webapp/yarn-debug.log*
+webapp/yarn-error.log*
+webapp/dist/
+webapp/build/
+webapp/.vite/
+
+# React build files
+webapp/dist/
+webapp/build/
+
+# Package manager lock files (uncomment if you want to ignore them)
+# webapp/package-lock.json
+# webapp/yarn.lock
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+webapp/coverage/
+webapp/.nyc_output
+
+# ESLint cache
+webapp/.eslintcache
+
+# Optional npm cache directory
+webapp/.npm
+
+# Optional eslint cache
+webapp/.eslintcache
+
+# Dependency directories
+webapp/node_modules/
+node_modules
+
+# Configuration files with secrets
+config/local.*
+config/production.*
+config/development.*
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+
+# Migration files (if they contain sensitive data)
+# migrations/*.sql
+
+# Backup files
+*.bak
+*.backup
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+
+# Visual Studio Code
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# Air (Go hot reload)
+.air.toml
+air.exe
+
+# Wire generated files
+wire_gen.go
+
+# Test binaries
+*.test
+
+# Output of the go coverage tool
+*.out
+*.html
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
