@@ -132,7 +132,6 @@ config/development.*
 *.vsix
 
 # Air (Go hot reload)
-.air.toml
 air.exe
 
 # Wire generated files

@@ -1,0 +1,31 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# Build the API from the cmd/api package and output the binary into tmp/
+cmd = "go build -o ./tmp/api ./cmd/api"
+bin = "./tmp/api"
+
+# Rebuild/restart when these file types change
+include_ext = ["go", "tpl", "tmpl", "html", "sql", "env"]
+
+# Ignore common folders we don't want to watch
+exclude_dir = ["tmp", "vendor", "node_modules"]
+
+# Don't restart on test file changes
+exclude_regex = ["_test\\.go"]
+
+follow_symlink = true
+stop_on_error = true
+delay = 200 # ms
+
+[log]
+color = "auto"
+time = true
+
+# Optional: if you need to prefix environment variables or pass args,
+# uncomment and adjust the following:
+# full_bin = "YOUR_ENV=value ./tmp/api --your-flags"
+
+# [misc]
+# clean_on_exit = true
