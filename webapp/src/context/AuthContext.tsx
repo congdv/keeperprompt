@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from 'react'
+import React, { createContext, useContext, useMemo, useState, useEffect } from 'react'
 import api from '../lib/axios'
 
 type User = {
@@ -12,6 +12,7 @@ type AuthState = {
   user: User | null
   roles: string[]
   accessToken: string | null
+  isLoading: boolean
 }
 
 type AuthContextValue = AuthState & {
@@ -21,7 +22,7 @@ type AuthContextValue = AuthState & {
   applySession: (data: { user: User, roles: string[], accessToken: string }) => void
 }
 
-let currentAuth: AuthState = { user: null, roles: [], accessToken: null }
+let currentAuth: AuthState = { user: null, roles: [], accessToken: null, isLoading: true }
 
 export function getAuth() {
   return currentAuth
@@ -34,7 +35,7 @@ export function setAuth(next: Partial<AuthState>) {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AuthState>({ user: null, roles: [], accessToken: null })
+  const [state, setState] = useState<AuthState>({ user: null, roles: [], accessToken: null, isLoading: true })
 
   const sync = (next: Partial<AuthState>) => {
     setState((prev) => {
@@ -44,12 +45,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })
   }
 
+  // Check for existing session on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await api.post('/auth/refresh')
+        sync({
+          user: response.data.user,
+          roles: response.data.roles ?? [],
+          accessToken: response.data.access_token,
+          isLoading: false,
+        })
+      } catch (error) {
+        // No valid session, user needs to login
+        sync({
+          user: null,
+          roles: [],
+          accessToken: null,
+          isLoading: false
+        })
+      }
+    }
+
+    checkSession()
+  }, [])
+
   const login = async (email: string, password: string) => {
     const res = await api.post('/auth/login', { email, password })
     sync({
       user: res.data.user,
       roles: res.data.roles ?? [],
       accessToken: res.data.access_token,
+      isLoading: false,
     })
   }
 
@@ -61,11 +88,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await api.post('/auth/logout')
     } catch { }
-    sync({ user: null, roles: [], accessToken: null })
+    sync({ user: null, roles: [], accessToken: null, isLoading: false })
   }
 
   const applySession = (data: { user: User, roles: string[], accessToken: string }) => {
-    sync({ user: data.user, roles: data.roles, accessToken: data.accessToken })
+    sync({ user: data.user, roles: data.roles, accessToken: data.accessToken, isLoading: false })
   }
 
   const value = useMemo<AuthContextValue>(() => ({

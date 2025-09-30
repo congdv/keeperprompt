@@ -1,5 +1,5 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom'
-import { ConfigProvider, Layout, Menu, Button, Space, Typography } from 'antd'
+import { ConfigProvider, Layout, Menu, Button, Space, Typography, Spin } from 'antd'
 import { UserOutlined, LogoutOutlined, HomeOutlined, DashboardOutlined, SettingOutlined } from '@ant-design/icons'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -13,7 +13,17 @@ const { Header, Content } = Layout
 const { Text } = Typography
 
 export default function App() {
-  const { user, roles, logout } = useAuth()
+  const { user, roles, logout, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <ConfigProvider>
+        <Layout style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Spin size="large" />
+        </Layout>
+      </ConfigProvider>
+    )
+  }
 
   return (
     <ConfigProvider>

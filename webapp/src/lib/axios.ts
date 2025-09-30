@@ -49,14 +49,14 @@ api.interceptors.response.use(
       const r = await api.post('/auth/refresh')
       const token = r.data?.access_token as string | undefined
       if (token) {
-        setAuth({ accessToken: token, user: r.data.user, roles: r.data.roles })
+        setAuth({ accessToken: token, user: r.data.user, roles: r.data.roles, isLoading: false })
       }
       onRefreshed()
       config.__isRetry = true
       return api(config)
     } catch (e) {
       onRefreshed()
-      setAuth({ accessToken: null, user: null, roles: [] })
+      setAuth({ accessToken: null, user: null, roles: [], isLoading: false })
       throw e
     } finally {
       isRefreshing = false
