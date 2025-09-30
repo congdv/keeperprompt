@@ -58,6 +58,10 @@ func main() {
 	api.POST("/auth/logout", middleware.Authenticate(cfg, authService), authHandler.LogOut)
 	api.POST("/auth/me", middleware.Authenticate(cfg, authService), authHandler.Me)
 
+	googleHandler := handlers.NewGoogleAuthHandler(authService, cfg)
+	api.GET("/auth/google/start", googleHandler.Start)
+	api.GET("/auth/google/callback", googleHandler.Callback)
+
 	userHandler := handlers.NewUserHandler()
 	api.GET("/user/profile", middleware.Authenticate(cfg, authService), userHandler.Profile)
 

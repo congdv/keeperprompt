@@ -39,7 +39,7 @@ func Load() (*Config, error) {
 		JWTRefreshTTLHrs:    envInt("JWT_REFRESH_TTL_HOURS", 24*7),
 
 		GoogleClientID:     env("GOOGLE_CLIENT_ID", ""),
-		GoogleClientSecret: env("GOOLE_CLIENT_SECRET", ""),
+		GoogleClientSecret: env("GOOGLE_CLIENT_SECRET", ""),
 		GoogleRedirectUrl:  env("GOOGLE_REDIRECT_URL", ""),
 	}
 	return cfg, nil

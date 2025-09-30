@@ -10,13 +10,13 @@ import (
 	"github.com/google/uuid"
 )
 
-type AuthHander struct {
+type AuthHandler struct {
 	auth services.AuthService
 	cfg  *config.Config
 }
 
-func NewAuthHandler(auth services.AuthService, cfg *config.Config) *AuthHander {
-	return &AuthHander{auth: auth, cfg: cfg}
+func NewAuthHandler(auth services.AuthService, cfg *config.Config) *AuthHandler {
+	return &AuthHandler{auth: auth, cfg: cfg}
 }
 
 type registerRequest struct {
@@ -24,7 +24,7 @@ type registerRequest struct {
 	Password string `json:"password" binding:"required,min=8"`
 }
 
-func (h *AuthHander) Register(c *gin.Context) {
+func (h *AuthHandler) Register(c *gin.Context) {
 	var req registerRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid email and password"})
@@ -44,7 +44,7 @@ type loginReq struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (h *AuthHander) Login(c *gin.Context) {
+func (h *AuthHandler) Login(c *gin.Context) {
 	var req loginReq
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "email or password is invalid"})
@@ -72,7 +72,7 @@ func httpOnlyRefreshCookie(c *gin.Context, cfg *config.Config, value string, exp
 	c.SetCookie("refresh_token", value, int(time.Until(exp).Seconds()), "/api/auth", cfg.CookieDomain, cfg.CookieSecure, true)
 }
 
-func (h *AuthHander) Refresh(c *gin.Context) {
+func (h *AuthHandler) Refresh(c *gin.Context) {
 	cookie, err := c.Cookie("refresh_token")
 	if err != nil || cookie == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing refresh token"})
@@ -124,7 +124,7 @@ func (h *AuthHander) Refresh(c *gin.Context) {
 	})
 }
 
-func (h *AuthHander) LogOut(c *gin.Context) {
+func (h *AuthHandler) LogOut(c *gin.Context) {
 	if cookie, err := c.Cookie("refresh_token"); err == nil && cookie != "" {
 		if _, jti, _, err := h.auth.ValidateRefreshToken(cookie); err != nil {
 			_ = h.auth.RevokeRefresh(c.Request.Context(), jti)
@@ -135,7 +135,7 @@ func (h *AuthHander) LogOut(c *gin.Context) {
 	}
 }
 
-func (h *AuthHander) Me(c *gin.Context) {
+func (h *AuthHandler) Me(c *gin.Context) {
 	uidVal, _ := c.Get("userId")
 	userId := uidVal.(uuid.UUID)
 	auth, err := h.auth.Me(c.Request.Context(), userId)
