@@ -1,13 +1,24 @@
-# Go Authentication System
+# AI Prompt Keeper
 
-A full-stack authentication system built with Go (Gin framework) and React (TypeScript + Vite). This project provides a complete authentication solution with JWT tokens, OAuth integration, role-based access control, and a modern React frontend.
+A full-stack web application for storing, organizing, and managing AI prompts built with Go (Gin framework) and React (TypeScript + Vite). This project provides a comprehensive solution for AI prompt management with categories, tags, search functionality, sharing capabilities, and user authentication.
 
 ## 🚀 Features
 
-### Backend (Go)
+### Core Functionality
+- **Prompt Management** - Create, read, update, and delete AI prompts
+- **Organization** - Categorize prompts with custom categories and tags
+- **Search & Discovery** - Powerful search functionality with filters
+- **Sharing** - Share prompts with other users or make them public
+- **Version Control** - Track prompt history and versions
+- **Import/Export** - Backup and migrate prompt collections
+
+### Authentication & Security
 - **JWT Authentication** - Secure token-based authentication
-- **OAuth Integration** - Social login support
+- **OAuth Integration** - Social login with Google and GitHub
 - **Role-based Access Control** - Admin and user roles
+- **Protected Routes** - Secure access to user data
+
+### Backend (Go)
 - **RESTful API** - Clean API design with Gin framework
 - **Database Integration** - PostgreSQL with migrations
 - **Middleware Support** - Authentication and CORS middleware
@@ -16,12 +27,10 @@ A full-stack authentication system built with Go (Gin framework) and React (Type
 ### Frontend (React)
 - **Modern React** - Built with React 18 and TypeScript
 - **Vite Build Tool** - Fast development and build process
-- **TailwindCSS** - Utility-first CSS framework
+- **Ant Design** - Enterprise-grade UI design language and components
 - **React Query** - Powerful data fetching and caching
 - **React Router** - Client-side routing
-- **Shadcn/ui Components** - Beautiful and accessible UI components
-- **Protected Routes** - Route-level authentication
-- **OAuth Callback Handling** - Seamless social login flow
+- **Responsive Design** - Mobile-first responsive interface
 
 ## 🛠️ Tech Stack
 
@@ -38,11 +47,10 @@ A full-stack authentication system built with Go (Gin framework) and React (Type
 - **Language**: TypeScript
 - **Framework**: React 18
 - **Build Tool**: Vite
-- **Styling**: TailwindCSS
+- **UI Library**: Ant Design (antd)
 - **HTTP Client**: Axios
 - **State Management**: React Query
 - **Routing**: React Router DOM
-- **UI Components**: Radix UI + Shadcn/ui
 
 ## 📋 Prerequisites
 
@@ -55,8 +63,8 @@ A full-stack authentication system built with Go (Gin framework) and React (Type
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/congdv/go-auth.git
-cd go-auth
+git clone https://github.com/congdv/keeperprompt.git
+cd keeperprompt
 ```
 
 ### 2. Backend Setup
@@ -74,7 +82,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
-DB_NAME=go_auth_db
+DB_NAME=keeper_prompt_db
 DB_SSL_MODE=disable
 
 # JWT
@@ -84,6 +92,8 @@ JWT_EXPIRY=24h
 # OAuth (optional)
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
 
 # Server
 PORT=8080
@@ -93,10 +103,10 @@ GIN_MODE=debug
 #### Run database migrations
 ```bash
 # Create database
-createdb go_auth_db
+createdb keeper_prompt_db
 
 # Run migrations
-psql -d go_auth_db -f migrations/0001_init.sql
+psql -d keeper_prompt_db -f migrations/0001_init.sql
 ```
 
 ### 3. Frontend Setup
@@ -174,7 +184,28 @@ The React app will start on `http://localhost:5173`
 
 ### OAuth
 - `GET /api/auth/oauth/google` - Google OAuth login
+- `GET /api/auth/oauth/github` - GitHub OAuth login
 - `GET /api/auth/oauth/callback` - OAuth callback handler
+
+### Prompts (Protected)
+- `GET /api/prompts` - Get user's prompts
+- `POST /api/prompts` - Create new prompt
+- `GET /api/prompts/:id` - Get prompt by ID
+- `PUT /api/prompts/:id` - Update prompt
+- `DELETE /api/prompts/:id` - Delete prompt
+- `GET /api/prompts/search` - Search prompts
+
+### Categories (Protected)
+- `GET /api/categories` - Get user's categories
+- `POST /api/categories` - Create new category
+- `PUT /api/categories/:id` - Update category
+- `DELETE /api/categories/:id` - Delete category
+
+### Tags (Protected)
+- `GET /api/tags` - Get user's tags
+- `POST /api/tags` - Create new tag
+- `PUT /api/tags/:id` - Update tag
+- `DELETE /api/tags/:id` - Delete tag
 
 ### Users (Protected)
 - `GET /api/users` - Get users (admin only)
@@ -197,6 +228,26 @@ The React app will start on `http://localhost:5173`
 | `GIN_MODE` | Gin mode (debug/release) | No |
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID | No |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | No |
+| `GITHUB_CLIENT_ID` | GitHub OAuth client ID | No |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret | No |
+
+## 📱 Usage
+
+### Managing Prompts
+1. **Create Prompts**: Add new AI prompts with titles, descriptions, and content
+2. **Organize**: Assign categories and tags to your prompts for better organization
+3. **Search**: Use the search functionality to quickly find prompts by keywords, categories, or tags
+4. **Share**: Make prompts public or share them with specific users
+5. **Version Control**: Track changes and maintain different versions of your prompts
+
+### Categories and Tags
+- Create custom categories to organize prompts by topic or use case
+- Use tags for more granular organization and cross-category labeling
+- Filter and search prompts by categories and tags
+
+### Import/Export
+- Export your prompt collection for backup purposes
+- Import prompts from other sources or migrate between accounts
 
 ## 🧪 Testing
 
@@ -248,6 +299,11 @@ If you have any questions or need help, please open an issue on GitHub.
 
 - [Gin Web Framework](https://gin-gonic.com/)
 - [React](https://reactjs.org/)
-- [TailwindCSS](https://tailwindcss.com/)
-- [Shadcn/ui](https://ui.shadcn.com/)
+- [Ant Design](https://ant.design/)
 - [Vite](https://vitejs.dev/)
+- [React Query](https://tanstack.com/query/latest)
+- [PostgreSQL](https://www.postgresql.org/)
+
+---
+
+**AI Prompt Keeper** - Organize, manage, and share your AI prompts efficiently.
