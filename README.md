@@ -264,6 +264,11 @@ npm test
 yarn test
 ```
 
+```
+docker build -t keeper-prompt .
+docker run --env-file .env --network host keeper-prompt
+```
+
 ## 🏗️ Building for Production
 
 ### Backend

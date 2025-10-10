@@ -27,6 +27,7 @@ WORKDIR /root/
 
 # Copy the Go binary
 COPY --from=backend-builder /app/main .
+RUN chmod +x ./main
 
 # Copy the built frontend
 COPY --from=frontend-builder /app/webapp/dist ./webapp/dist
@@ -34,6 +35,9 @@ COPY --from=frontend-builder /app/webapp/dist ./webapp/dist
 # Create a non-root user
 RUN addgroup -g 1001 -S appuser && \
     adduser -S appuser -u 1001
+
+# Change ownership of the binary to the app user
+RUN chown appuser:appuser ./main
 
 USER appuser
 
