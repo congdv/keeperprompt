@@ -23,26 +23,28 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main cmd/api/main
 FROM alpine:latest
 
 RUN apk --no-cache add ca-certificates
-WORKDIR /root/
 
-# Copy the Go binary
-COPY --from=backend-builder /app/main .
+# Create a non-root user first
+RUN addgroup -g 1001 -S appuser && \
+    adduser -S appuser -u 1001
+
+# Set working directory
+WORKDIR /app
+
+# Copy the Go binary with proper permissions
+COPY --from=backend-builder /app/main ./main
 RUN chmod +x ./main
 
 # Copy the built frontend
 COPY --from=frontend-builder /app/webapp/dist ./webapp/dist
 
-# Create a non-root user
-RUN addgroup -g 1001 -S appuser && \
-    adduser -S appuser -u 1001
-
-# Change ownership of the binary to the app user
-RUN chown appuser:appuser ./main
+# Change ownership to appuser
+RUN chown -R appuser:appuser /app
 
 USER appuser
 
 # Expose port
 EXPOSE 8080
 
-# Command to run
-CMD ["./main"]
+# Command to run with absolute path
+CMD ["/app/main"]
