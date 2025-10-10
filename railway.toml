@@ -1,0 +1,17 @@
+[build]
+builder = "dockerfile"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+
+[[services]]
+name = "keeper-prompt"
+source = "."
+
+[services.variables]
+PORT = "8080"
+FRONTEND_ORIGIN = "https://keeper-prompt-production.up.railway.app"
+COOKIE_DOMAIN = ".up.railway.app"
+COOKIE_SECURE = "true"
