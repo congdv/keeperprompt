@@ -4,7 +4,7 @@ FROM node:18-alpine AS frontend-builder
 
 WORKDIR /app/webapp
 COPY webapp/package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 COPY webapp/ ./
 RUN npm run build
