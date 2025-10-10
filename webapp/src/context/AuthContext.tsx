@@ -38,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AuthState>({ user: null, roles: [], accessToken: null, isLoading: true })
 
   const sync = (next: Partial<AuthState>) => {
+    console.log("🚀 ~ sync ~ next:", next)
     setState((prev) => {
       const merged = { ...prev, ...next }
       currentAuth = merged

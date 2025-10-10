@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"path/filepath"
 	"time"
 
 	"github.com/congdv/go-auth/api/internal/config"
@@ -64,6 +65,17 @@ func main() {
 
 	userHandler := handlers.NewUserHandler()
 	api.GET("/user/profile", middleware.Authenticate(cfg, authService), userHandler.Profile)
+	staticPath := filepath.Join("webapp", "dist")
+	r.Static("/assets", filepath.Join(staticPath, "assets"))
+	r.StaticFile("/favicon.ico", filepath.Join(staticPath, "favicon.ico"))
+
+	r.NoRoute(func(c *gin.Context) {
+		if len(c.Request.URL.Path) >= 4 && c.Request.URL.Path[:4] == "/api" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "API endpoint not found"})
+			return
+		}
+		c.File(filepath.Join(staticPath, "index.html"))
+	})
 
 	addr := ":" + cfg.Port
 	log.Printf("API listening on %s", addr)
