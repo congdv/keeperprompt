@@ -149,3 +149,6 @@ vendor/
 
 # Go workspace file
 go.work
+
+
+!webapp/index.html
