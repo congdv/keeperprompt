@@ -7,6 +7,11 @@ COPY webapp/package*.json ./
 RUN npm ci
 
 COPY webapp/ ./
+
+# Add build arg for API URL
+ARG VITE_API_BASE_URL=/api
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 RUN npm run build
 
 # Stage 2: Build the Go backend
