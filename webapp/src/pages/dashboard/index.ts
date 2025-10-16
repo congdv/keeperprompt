@@ -1,0 +1,7 @@
+export { default as HomePage } from './HomePage'
+export { default as DiscoverPage } from './DiscoverPage'
+export { default as LibraryPage } from './LibraryPage'
+export { default as TemplatesPage } from './TemplatesPage'
+export { default as DatabasePage } from './DatabasePage'
+export { default as BatchesPage } from './BatchesPage'
+export { default as ChainsPage } from './ChainsPage'

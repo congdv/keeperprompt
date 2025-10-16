@@ -1,19 +1,26 @@
-import { Link, Navigate, Route, Routes } from 'react-router-dom'
-import { ConfigProvider, Layout, Menu, Button, Space, Typography, Spin } from 'antd'
-import { UserOutlined, LogoutOutlined, HomeOutlined, DashboardOutlined, SettingOutlined } from '@ant-design/icons'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { ConfigProvider, Layout, Spin } from 'antd'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-import DashboardPage from './pages/DashboardPage'
 import AdminPage from './pages/AdminPage'
 import ProtectedRoute from './components/ProtectedRoute'
+import DashboardLayout from './components/Layout/DashboardLayout'
 import { useAuth } from './context/AuthContext'
 import OAuthCallbackPage from './pages/OAuthCallbackPage'
+import {
+  HomePage,
+  DiscoverPage,
+  LibraryPage,
+  TemplatesPage,
+  DatabasePage,
+  BatchesPage,
+  ChainsPage
+} from './pages/dashboard'
 
-const { Header, Content } = Layout
-const { Text } = Typography
+const { Content } = Layout
 
 export default function App() {
-  const { user, roles, logout, isLoading } = useAuth()
+  const { user, isLoading } = useAuth()
 
   if (isLoading) {
     return (
@@ -27,67 +34,32 @@ export default function App() {
 
   return (
     <ConfigProvider>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fff', borderBottom: '1px solid #f0f0f0' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Menu mode="horizontal" style={{ border: 'none', minWidth: 300 }}>
-              <Menu.Item key="home" icon={<HomeOutlined />}>
-                <Link to="/">Home</Link>
-              </Menu.Item>
-              <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-                <Link to="/dashboard">Dashboard</Link>
-              </Menu.Item>
-              <Menu.Item key="admin" icon={<SettingOutlined />}>
-                <Link to="/admin">Admin</Link>
-              </Menu.Item>
-            </Menu>
-          </div>
-          <Space>
-            {user ? (
-              <Space>
-                <Text type="secondary">
-                  <UserOutlined /> {user.email} ({roles.join(', ') || 'no role'})
-                </Text>
-                <Button
-                  type="text"
-                  icon={<LogoutOutlined />}
-                  onClick={logout}
-                >
-                  Logout
-                </Button>
-              </Space>
-            ) : (
-              <Space>
-                <Link to="/login">
-                  <Button type="link">Login</Button>
-                </Link>
-                <Link to="/register">
-                  <Button type="link">Register</Button>
-                </Link>
-              </Space>
-            )}
-          </Space>
-        </Header>
+      <Routes>
+        <Route path="/" element={!user ? <Navigate to="/login" replace /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
 
-        <Content style={{ padding: '24px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-          <Routes>
-            <Route path="/" element={<div>Welcome! Try registering, logging in, or Google Sign-In.</div>} />
-            <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/dashboard" replace />} />
-            <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin" element={
-              <ProtectedRoute requiredRoles={['admin']}>
-                <AdminPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
-          </Routes>
-        </Content>
-      </Layout>
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<HomePage />} />
+          <Route path="discover" element={<DiscoverPage />} />
+          <Route path="library" element={<LibraryPage />} />
+          <Route path="templates" element={<TemplatesPage />} />
+          <Route path="database" element={<DatabasePage />} />
+          <Route path="batches" element={<BatchesPage />} />
+          <Route path="chains" element={<ChainsPage />} />
+        </Route>
+
+        <Route path="/admin" element={
+          <ProtectedRoute requiredRoles={['admin']}>
+            <AdminPage />
+          </ProtectedRoute>
+        } />
+      </Routes>
     </ConfigProvider>
   )
 }

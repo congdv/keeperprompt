@@ -1,10 +1,25 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Form, Input, Button, Alert, Typography, Space, Divider } from 'antd'
-import { GoogleOutlined, UserOutlined, LockOutlined } from '@ant-design/icons'
+import { Form } from 'antd'
+import { EyeInvisibleOutlined, EyeOutlined, GoogleOutlined } from '@ant-design/icons'
 import { useAuth } from '../context/AuthContext'
-
-const { Title } = Typography
+import { theme } from '../styles/theme'
+import {
+  PageContainer,
+  StyledCard,
+  TitleContainer,
+  StyledTitle,
+  FormLabel,
+  StyledInput,
+  StyledPasswordInput,
+  ErrorMessage,
+  PrimaryButton,
+  LinkContainer,
+  StyledLink,
+  StyledDivider,
+  GoogleButton,
+  Footer,
+} from '../styles/global'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -33,61 +48,95 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '0 auto', padding: '2rem' }}>
-      <Title level={2}>Login</Title>
+    <PageContainer>
+      <StyledCard>
+        <TitleContainer>
+          <StyledTitle level={2}>
+            Keeper Prompt
+          </StyledTitle>
+        </TitleContainer>
 
-      {error && (
-        <Alert
-          message={error}
-          type="error"
-          showIcon
-          style={{ marginBottom: 16 }}
-        />
-      )}
-
-      <Form
-        name="login"
-        onFinish={onFinish}
-        layout="vertical"
-        size="large"
-      >
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'Please enter a valid email!' }
-          ]}
+        <Form
+          name="login"
+          onFinish={onFinish}
+          layout="vertical"
+          autoComplete="off"
         >
-          <Input prefix={<UserOutlined />} placeholder="Enter your email" />
-        </Form.Item>
+          <Form.Item
+            label={<FormLabel>Email Address</FormLabel>}
+            name="email"
+            rules={[
+              { required: true, message: 'Please input your email!' },
+              { type: 'email', message: 'Please enter a valid email!' }
+            ]}
+            validateStatus={error ? 'error' : ''}
+          >
+            <StyledInput
+              placeholder="Email Address"
+              size="large"
+            />
+          </Form.Item>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password prefix={<LockOutlined />} placeholder="Enter your password" />
-        </Form.Item>
+          <Form.Item
+            label={<FormLabel>Password</FormLabel>}
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+            validateStatus={error ? 'error' : ''}
+            style={{ marginBottom: theme.spacing.sm }}
+          >
+            <StyledPasswordInput
+              placeholder="Password"
+              size="large"
+              iconRender={(visible) =>
+                visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+              }
+            />
+          </Form.Item>
 
-        <Form.Item>
-          <Space direction="vertical" style={{ width: '100%' }}>
-            <Button type="primary" htmlType="submit" loading={loading} block>
-              Login
-            </Button>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
-            <Divider>OR</Divider>
-
-            <Button
-              icon={<GoogleOutlined />}
-              onClick={googleStart}
+          <Form.Item style={{ marginBottom: theme.spacing.sm }}>
+            <PrimaryButton
+              type="primary"
+              htmlType="submit"
+              loading={loading}
               block
+              size="large"
             >
-              Continue with Google
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    </div>
+              Sign In
+            </PrimaryButton>
+          </Form.Item>
+
+          <LinkContainer>
+            <span style={{ color: theme.colors.textSecondary, fontSize: theme.fontSize.sm }}>
+              Don't have an account?{' '}
+            </span>
+            <StyledLink
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/register')
+              }}
+            >
+              Register
+            </StyledLink>
+          </LinkContainer>
+        </Form>
+
+        <StyledDivider>OR</StyledDivider>
+
+        <GoogleButton
+          icon={<GoogleOutlined />}
+          onClick={googleStart}
+          block
+          size="large"
+        >
+          Continue with Google
+        </GoogleButton>
+
+        <Footer>
+          © 2025 keeperprompt.com
+        </Footer>
+      </StyledCard>
+    </PageContainer>
   )
 }
